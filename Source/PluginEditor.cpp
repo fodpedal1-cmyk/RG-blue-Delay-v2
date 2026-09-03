@@ -14,8 +14,8 @@ public:
         bool,
         bool) override
     {
-        // Completely transparent.
-        // The actual footswitch is painted in the editor.
+        // Transparent.
+        // Footswitch is painted manually in the editor.
     }
 
     void drawButtonText(
@@ -294,10 +294,6 @@ RGBlueDelayAudioProcessorEditor(
         500,
         640);
 
-    //==============================================================
-    // LED SYNCHRONIZATION TIMER
-    //==============================================================
-
     startTimerHz(30);
 }
 
@@ -373,7 +369,7 @@ void RGBlueDelayAudioProcessorEditor::setupKnob(
 }
 
 //================================================================
-// TIMER - KEEP LED SYNCHRONIZED WITH BYPASS
+// TIMER
 //================================================================
 
 void RGBlueDelayAudioProcessorEditor::timerCallback()
@@ -479,7 +475,21 @@ void RGBlueDelayAudioProcessorEditor::paint(
     }
 
     //==============================================================
-    // BRAND
+    // DIVIDER
+    //==============================================================
+
+    g.setColour(
+        juce::Colour(100, 110, 118));
+
+    g.drawLine(
+        45.0f,
+        382.0f,
+        455.0f,
+        382.0f,
+        1.0f);
+
+    //==============================================================
+    // TITLE
     //==============================================================
 
     g.setColour(
@@ -495,11 +505,15 @@ void RGBlueDelayAudioProcessorEditor::paint(
         "RG BLUE DELAY",
         juce::Rectangle<int>(
             50,
-            32,
+            392,
             400,
-            35),
+            32),
         juce::Justification::centred,
         1);
+
+    //==============================================================
+    // SUBTITLE
+    //==============================================================
 
     g.setColour(
         juce::Colour(170, 190, 205));
@@ -513,29 +527,18 @@ void RGBlueDelayAudioProcessorEditor::paint(
         "ANALOG STYLE DELAY",
         juce::Rectangle<int>(
             50,
-            67,
+            424,
             400,
             20),
         juce::Justification::centred,
         1);
 
     //==============================================================
-    // TOP DIVIDER
-    //==============================================================
-
-    g.setColour(
-        juce::Colour(100, 110, 118));
-
-    g.drawLine(
-        45.0f,
-        96.0f,
-        455.0f,
-        96.0f,
-        1.0f);
-
-    //==============================================================
     // LED
     //==============================================================
+
+    const float ledCX = 145.0f;
+    const float ledCY = 530.0f;
 
     bool bypassed =
         audioProcessor.parameters
@@ -551,8 +554,8 @@ void RGBlueDelayAudioProcessorEditor::paint(
                 .withAlpha(0.20f));
 
         g.fillEllipse(
-            69.0f,
-            485.0f,
+            ledCX - 27.0f,
+            ledCY - 27.0f,
             54.0f,
             54.0f);
 
@@ -562,8 +565,8 @@ void RGBlueDelayAudioProcessorEditor::paint(
             juce::Colours::deepskyblue);
 
         g.fillEllipse(
-            84.0f,
-            500.0f,
+            ledCX - 12.0f,
+            ledCY - 12.0f,
             24.0f,
             24.0f);
 
@@ -574,8 +577,8 @@ void RGBlueDelayAudioProcessorEditor::paint(
                 .withAlpha(0.65f));
 
         g.fillEllipse(
-            89.0f,
-            504.0f,
+            ledCX - 7.0f,
+            ledCY - 8.0f,
             7.0f,
             7.0f);
     }
@@ -587,8 +590,8 @@ void RGBlueDelayAudioProcessorEditor::paint(
             juce::Colour(30, 32, 34));
 
         g.fillEllipse(
-            84.0f,
-            500.0f,
+            ledCX - 12.0f,
+            ledCY - 12.0f,
             24.0f,
             24.0f);
 
@@ -596,19 +599,22 @@ void RGBlueDelayAudioProcessorEditor::paint(
             juce::Colour(70, 72, 74));
 
         g.drawEllipse(
-            84.0f,
-            500.0f,
+            ledCX - 12.0f,
+            ledCY - 12.0f,
             24.0f,
             24.0f,
             1.0f);
     }
 
     //==============================================================
-    // ROUND REALISTIC 3PDT FOOTSWITCH
+    // REALISTIC 3PDT FOOTSWITCH
+    // SAME OUTER DIAMETER AS KNOB
     //==============================================================
 
     const float switchCX = 250.0f;
     const float switchCY = 530.0f;
+
+    const float switchRadius = 64.35f;
 
     //==============================================================
     // DEEP SHADOW
@@ -619,10 +625,10 @@ void RGBlueDelayAudioProcessorEditor::paint(
             .withAlpha(0.80f));
 
     g.fillEllipse(
-        switchCX - 48.0f,
-        switchCY - 44.0f,
-        96.0f,
-        88.0f);
+        switchCX - switchRadius + 5.0f,
+        switchCY - switchRadius + 7.0f,
+        switchRadius * 2.0f,
+        switchRadius * 2.0f);
 
     //==============================================================
     // OUTER METAL WASHER
@@ -631,11 +637,11 @@ void RGBlueDelayAudioProcessorEditor::paint(
     juce::ColourGradient washerMetal(
         juce::Colour(230, 232, 233),
         switchCX,
-        switchCY - 43.0f,
+        switchCY - switchRadius,
 
         juce::Colour(48, 51, 53),
         switchCX,
-        switchCY + 43.0f,
+        switchCY + switchRadius,
 
         false);
 
@@ -643,56 +649,62 @@ void RGBlueDelayAudioProcessorEditor::paint(
         washerMetal);
 
     g.fillEllipse(
-        switchCX - 43.0f,
-        switchCY - 43.0f,
-        86.0f,
-        86.0f);
+        switchCX - switchRadius,
+        switchCY - switchRadius,
+        switchRadius * 2.0f,
+        switchRadius * 2.0f);
 
     g.setColour(
         juce::Colour(18, 20, 22));
 
     g.drawEllipse(
-        switchCX - 43.0f,
-        switchCY - 43.0f,
-        86.0f,
-        86.0f,
+        switchCX - switchRadius,
+        switchCY - switchRadius,
+        switchRadius * 2.0f,
+        switchRadius * 2.0f,
         2.5f);
 
     //==============================================================
     // INNER BLACK MOUNTING RING
     //==============================================================
 
+    const float innerRadius =
+        switchRadius * (35.0f / 43.0f);
+
     g.setColour(
         juce::Colour(18, 20, 22));
 
     g.fillEllipse(
-        switchCX - 35.0f,
-        switchCY - 35.0f,
-        70.0f,
-        70.0f);
+        switchCX - innerRadius,
+        switchCY - innerRadius,
+        innerRadius * 2.0f,
+        innerRadius * 2.0f);
 
     g.setColour(
         juce::Colour(100, 103, 105));
 
     g.drawEllipse(
-        switchCX - 34.0f,
-        switchCY - 34.0f,
-        68.0f,
-        68.0f,
+        switchCX - innerRadius,
+        switchCY - innerRadius,
+        innerRadius * 2.0f,
+        innerRadius * 2.0f,
         1.5f);
 
     //==============================================================
     // ROUND METAL SWITCH CAP
     //==============================================================
 
+    const float capRadius =
+        switchRadius * (29.0f / 43.0f);
+
     juce::ColourGradient capMetal(
         juce::Colour(248, 249, 249),
-        switchCX - 12.0f,
-        switchCY - 28.0f,
+        switchCX - capRadius * 0.40f,
+        switchCY - capRadius,
 
         juce::Colour(62, 65, 67),
-        switchCX + 14.0f,
-        switchCY + 30.0f,
+        switchCX + capRadius * 0.48f,
+        switchCY + capRadius,
 
         true);
 
@@ -700,10 +712,10 @@ void RGBlueDelayAudioProcessorEditor::paint(
         capMetal);
 
     g.fillEllipse(
-        switchCX - 29.0f,
-        switchCY - 29.0f,
-        58.0f,
-        58.0f);
+        switchCX - capRadius,
+        switchCY - capRadius,
+        capRadius * 2.0f,
+        capRadius * 2.0f);
 
     // Cap border
 
@@ -711,10 +723,10 @@ void RGBlueDelayAudioProcessorEditor::paint(
         juce::Colour(25, 27, 29));
 
     g.drawEllipse(
-        switchCX - 29.0f,
-        switchCY - 29.0f,
-        58.0f,
-        58.0f,
+        switchCX - capRadius,
+        switchCY - capRadius,
+        capRadius * 2.0f,
+        capRadius * 2.0f,
         2.0f);
 
     //==============================================================
@@ -724,10 +736,10 @@ void RGBlueDelayAudioProcessorEditor::paint(
     juce::Path highlightArc;
 
     highlightArc.addArc(
-        switchCX - 22.0f,
-        switchCY - 22.0f,
-        44.0f,
-        44.0f,
+        switchCX - capRadius * 0.76f,
+        switchCY - capRadius * 0.76f,
+        capRadius * 1.52f,
+        capRadius * 1.52f,
         3.7f,
         5.6f,
         true);
@@ -738,7 +750,8 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     g.strokePath(
         highlightArc,
-        juce::PathStrokeType(2.5f));
+        juce::PathStrokeType(
+            switchRadius * 0.039f));
 
     //==============================================================
     // LOWER REFLECTION
@@ -747,10 +760,10 @@ void RGBlueDelayAudioProcessorEditor::paint(
     juce::Path lowerReflection;
 
     lowerReflection.addArc(
-        switchCX - 23.0f,
-        switchCY - 23.0f,
-        46.0f,
-        46.0f,
+        switchCX - capRadius * 0.79f,
+        switchCY - capRadius * 0.79f,
+        capRadius * 1.58f,
+        capRadius * 1.58f,
         0.3f,
         2.4f,
         true);
@@ -761,29 +774,36 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     g.strokePath(
         lowerReflection,
-        juce::PathStrokeType(2.0f));
+        juce::PathStrokeType(
+            switchRadius * 0.031f));
 
     //==============================================================
     // CENTRE CONTACT
     //==============================================================
 
+    const float contactRadius =
+        switchRadius * (5.0f / 43.0f);
+
     g.setColour(
         juce::Colour(25, 27, 29));
 
     g.fillEllipse(
-        switchCX - 5.0f,
-        switchCY - 5.0f,
-        10.0f,
-        10.0f);
+        switchCX - contactRadius,
+        switchCY - contactRadius,
+        contactRadius * 2.0f,
+        contactRadius * 2.0f);
 
     g.setColour(
         juce::Colour(175, 178, 180));
 
+    const float contactHighlight =
+        switchRadius * (2.5f / 43.0f);
+
     g.fillEllipse(
-        switchCX - 2.5f,
-        switchCY - 2.5f,
-        5.0f,
-        5.0f);
+        switchCX - contactHighlight,
+        switchCY - contactHighlight,
+        contactHighlight * 2.0f,
+        contactHighlight * 2.0f);
 
     //==============================================================
     // FOOTER
@@ -814,48 +834,78 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
 void RGBlueDelayAudioProcessorEditor::resized()
 {
-    delaySlider.setBounds(
-        45,
-        110,
-        180,
-        165);
-
-    repeatSlider.setBounds(
-        275,
-        110,
-        180,
-        165);
+    //==============================================================
+    // MIX - UPPER CENTER
+    //==============================================================
 
     mixSlider.setBounds(
         160,
-        295,
+        35,
+        180,
+        165);
+
+    mixLabel.setBounds(
+        185,
+        185,
+        130,
+        25);
+
+    //==============================================================
+    // DELAY - LEFT MIDDLE
+    //==============================================================
+
+    delaySlider.setBounds(
+        35,
+        205,
         180,
         165);
 
     delayLabel.setBounds(
-        70,
-        258,
+        60,
+        350,
         130,
         25);
+
+    //==============================================================
+    // REPEAT - RIGHT MIDDLE
+    //==============================================================
+
+    repeatSlider.setBounds(
+        285,
+        205,
+        180,
+        165);
 
     repeatLabel.setBounds(
-        300,
-        258,
+        310,
+        350,
         130,
         25);
 
-    mixLabel.setBounds(
-        185,
-        442,
-        130,
-        25);
+    //==============================================================
+    // FOOTSWITCH
+    //==============================================================
 
-    // Invisible clickable area.
-    // The visual switch itself is round.
+    const float switchRadius = 64.35f;
+
+    const int switchX =
+        (int) std::round(
+            250.0f - switchRadius);
+
+    const int switchY =
+        (int) std::round(
+            530.0f - switchRadius);
+
+    const int switchSize =
+        (int) std::round(
+            switchRadius * 2.0f);
+
+    // Clickable area exactly follows
+    // the visual footswitch.
 
     footswitchButton.setBounds(
-        155,
-        480,
-        190,
-        105);
+        switchX,
+        switchY,
+        switchSize,
+        switchSize);
 }
