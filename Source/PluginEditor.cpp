@@ -4,201 +4,183 @@
 
 namespace
 {
-class RealisticLookAndFeel : public juce::LookAndFeel_V4
-{
-public:
-    void drawButtonBackground(
-        juce::Graphics&,
-        juce::Button&,
-        const juce::Colour&,
-        bool,
-        bool) override
+    //==============================================================
+    // RG BLUE DELAY LOOK AND FEEL
+    //==============================================================
+
+    class RealisticLookAndFeel : public juce::LookAndFeel_V4
     {
-        // Transparent.
-        // Footswitch is painted manually in the editor.
-    }
+    public:
 
-    void drawButtonText(
-        juce::Graphics&,
-        juce::TextButton&,
-        bool,
-        bool) override
-    {
-        // No text or rectangle.
-    }
-
-    void drawRotarySlider(
-        juce::Graphics& g,
-        int x,
-        int y,
-        int w,
-        int h,
-        float value,
-        float startAngle,
-        float endAngle,
-        juce::Slider&) override
-    {
-        auto r =
-            juce::Rectangle<float>(
-                (float)x,
-                (float)y,
-                (float)w,
-                (float)h);
-
-        auto c = r.getCentre();
-
-        float radius =
-            juce::jmin(
-                r.getWidth(),
-                r.getHeight()) * 0.39f;
-
-        //==========================================================
-        // SHADOW
-        //==========================================================
-
-        g.setColour(
-            juce::Colours::black.withAlpha(0.65f));
-
-        g.fillEllipse(
-            c.x - radius + 4.0f,
-            c.y - radius + 6.0f,
-            radius * 2.0f,
-            radius * 2.0f);
-
-        //==========================================================
-        // OUTER METAL RING
-        //==========================================================
-
-        g.setColour(
-            juce::Colour(22, 24, 26));
-
-        g.fillEllipse(
-            c.x - radius,
-            c.y - radius,
-            radius * 2.0f,
-            radius * 2.0f);
-
-        g.setColour(
-            juce::Colour(135, 139, 142));
-
-        g.drawEllipse(
-            c.x - radius,
-            c.y - radius,
-            radius * 2.0f,
-            radius * 2.0f,
-            2.0f);
-
-        //==========================================================
-        // METAL KNOB
-        //==========================================================
-
-        float kr = radius * 0.83f;
-
-        juce::ColourGradient metal(
-            juce::Colour(235, 237, 238),
-            c.x,
-            c.y - kr,
-
-            juce::Colour(52, 55, 58),
-            c.x,
-            c.y + kr,
-
-            false);
-
-        g.setGradientFill(metal);
-
-        g.fillEllipse(
-            c.x - kr,
-            c.y - kr,
-            kr * 2.0f,
-            kr * 2.0f);
-
-        g.setColour(
-            juce::Colour(205, 208, 210));
-
-        g.drawEllipse(
-            c.x - kr,
-            c.y - kr,
-            kr * 2.0f,
-            kr * 2.0f,
-            1.5f);
-
-        //==========================================================
-        // KNOB GRIP
-        //==========================================================
-
-        g.setColour(
-            juce::Colours::black.withAlpha(0.35f));
-
-        for (int i = 0; i < 24; ++i)
+        void drawButtonBackground(
+            juce::Graphics&,
+            juce::Button&,
+            const juce::Colour&,
+            bool,
+            bool) override
         {
-            float a =
-                juce::MathConstants<float>::twoPi
-                * (float)i / 24.0f;
+            // Footswitch is painted manually.
+        }
 
-            float x1 =
-                c.x + std::cos(a) * kr * 0.88f;
+        void drawButtonText(
+            juce::Graphics&,
+            juce::TextButton&,
+            bool,
+            bool) override
+        {
+            // No button text.
+        }
 
-            float y1 =
-                c.y + std::sin(a) * kr * 0.88f;
+        //==========================================================
+        // WHITE PLASTIC KNOB + BLACK POINTER
+        //==========================================================
 
-            float x2 =
-                c.x + std::cos(a) * kr * 0.97f;
+        void drawRotarySlider(
+            juce::Graphics& g,
+            int x,
+            int y,
+            int w,
+            int h,
+            float value,
+            float startAngle,
+            float endAngle,
+            juce::Slider&) override
+        {
+            auto r = juce::Rectangle<float>(
+                (float) x,
+                (float) y,
+                (float) w,
+                (float) h);
 
-            float y2 =
-                c.y + std::sin(a) * kr * 0.97f;
+            auto centre = r.getCentre();
+
+            const float radius =
+                juce::jmin(
+                    r.getWidth(),
+                    r.getHeight()) * 0.39f;
+
+            //======================================================
+            // SOFT SHADOW
+            //======================================================
+
+            g.setColour(
+                juce::Colours::black.withAlpha(0.35f));
+
+            g.fillEllipse(
+                centre.x - radius + 3.0f,
+                centre.y - radius + 5.0f,
+                radius * 2.0f,
+                radius * 2.0f);
+
+            //======================================================
+            // WHITE PLASTIC KNOB
+            //======================================================
+
+            const float knobRadius =
+                radius * 0.88f;
+
+            juce::ColourGradient plastic(
+                juce::Colour(255, 255, 255),
+                centre.x - knobRadius * 0.45f,
+                centre.y - knobRadius,
+
+                juce::Colour(205, 207, 209),
+                centre.x + knobRadius * 0.45f,
+                centre.y + knobRadius,
+
+                true);
+
+            g.setGradientFill(plastic);
+
+            g.fillEllipse(
+                centre.x - knobRadius,
+                centre.y - knobRadius,
+                knobRadius * 2.0f,
+                knobRadius * 2.0f);
+
+            //======================================================
+            // SUBTLE PLASTIC EDGE
+            //======================================================
+
+            g.setColour(
+                juce::Colour(170, 173, 176));
+
+            g.drawEllipse(
+                centre.x - knobRadius,
+                centre.y - knobRadius,
+                knobRadius * 2.0f,
+                knobRadius * 2.0f,
+                1.4f);
+
+            //======================================================
+            // SUBTLE HIGHLIGHT
+            //======================================================
+
+            g.setColour(
+                juce::Colours::white.withAlpha(0.55f));
+
+            g.fillEllipse(
+                centre.x - knobRadius * 0.52f,
+                centre.y - knobRadius * 0.68f,
+                knobRadius * 0.65f,
+                knobRadius * 0.34f);
+
+            //======================================================
+            // BLACK POINTER
+            //======================================================
+
+            const float angle =
+                startAngle +
+                value * (endAngle - startAngle);
+
+            const float pointerStart =
+                knobRadius * 0.10f;
+
+            const float pointerEnd =
+                knobRadius * 0.70f;
+
+            const float x1 =
+                centre.x +
+                std::cos(angle) * pointerStart;
+
+            const float y1 =
+                centre.y +
+                std::sin(angle) * pointerStart;
+
+            const float x2 =
+                centre.x +
+                std::cos(angle) * pointerEnd;
+
+            const float y2 =
+                centre.y +
+                std::sin(angle) * pointerEnd;
+
+            g.setColour(
+                juce::Colours::black);
 
             g.drawLine(
                 x1,
                 y1,
                 x2,
                 y2,
-                1.0f);
+                4.0f);
+
+            //======================================================
+            // SMALL CENTRE CAP
+            //======================================================
+
+            g.setColour(
+                juce::Colour(245, 245, 245));
+
+            g.fillEllipse(
+                centre.x - 5.5f,
+                centre.y - 5.5f,
+                11.0f,
+                11.0f);
         }
+    };
 
-        //==========================================================
-        // POSITION MARKER
-        //==========================================================
-
-        float angle =
-            startAngle +
-            value * (endAngle - startAngle);
-
-        float marker =
-            kr * 0.68f;
-
-        float mx =
-            c.x + std::cos(angle) * marker;
-
-        float my =
-            c.y + std::sin(angle) * marker;
-
-        g.setColour(
-            juce::Colours::white);
-
-        g.drawLine(
-            c.x,
-            c.y,
-            mx,
-            my,
-            3.5f);
-
-        //==========================================================
-        // CENTRE CAP
-        //==========================================================
-
-        g.setColour(
-            juce::Colour(30, 32, 34));
-
-        g.fillEllipse(
-            c.x - 7.0f,
-            c.y - 7.0f,
-            14.0f,
-            14.0f);
-    }
-};
-
-RealisticLookAndFeel pedalLookAndFeel;
+    RealisticLookAndFeel pedalLookAndFeel;
 }
 
 //================================================================
@@ -211,6 +193,10 @@ RGBlueDelayAudioProcessorEditor(
     : AudioProcessorEditor(&p),
       audioProcessor(p)
 {
+    //==============================================================
+    // KNOBS
+    //==============================================================
+
     setupKnob(
         delaySlider,
         delayLabel,
@@ -287,8 +273,16 @@ RGBlueDelayAudioProcessorEditor(
                 "BYPASS",
                 footswitchButton);
 
+    //==============================================================
+    // LOOK AND FEEL
+    //==============================================================
+
     setLookAndFeel(
         &pedalLookAndFeel);
+
+    //==============================================================
+    // WINDOW
+    //==============================================================
 
     setSize(
         500,
@@ -347,6 +341,10 @@ void RGBlueDelayAudioProcessorEditor::setupKnob(
     addAndMakeVisible(
         slider);
 
+    //==============================================================
+    // LABEL
+    //==============================================================
+
     label.setText(
         text,
         juce::dontSendNotification);
@@ -388,15 +386,15 @@ void RGBlueDelayAudioProcessorEditor::paint(
         getLocalBounds().toFloat();
 
     //==============================================================
-    // 125B METAL ENCLOSURE
+    // LIGHT BLUE METAL ENCLOSURE
     //==============================================================
 
     juce::ColourGradient body(
-        juce::Colour(32, 44, 55),
+        juce::Colour(155, 215, 240),
         0.0f,
         0.0f,
 
-        juce::Colour(8, 13, 18),
+        juce::Colour(65, 145, 190),
         500.0f,
         640.0f,
 
@@ -409,7 +407,18 @@ void RGBlueDelayAudioProcessorEditor::paint(
         18.0f);
 
     //==============================================================
-    // METALLIC RIM
+    // SUBTLE METAL HIGHLIGHT
+    //==============================================================
+
+    g.setColour(
+        juce::Colours::white.withAlpha(0.10f));
+
+    g.fillRoundedRectangle(
+        b.reduced(10.0f).withHeight(150.0f),
+        15.0f);
+
+    //==============================================================
+    // METALLIC OUTER RIM
     //==============================================================
 
     g.setColour(
@@ -425,7 +434,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
     //==============================================================
 
     g.setColour(
-        juce::Colour(12, 16, 20));
+        juce::Colour(30, 70, 90));
 
     g.drawRoundedRectangle(
         b.reduced(13.0f),
@@ -455,7 +464,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
     for (int i = 0; i < 4; ++i)
     {
         g.setColour(
-            juce::Colour(165, 168, 170));
+            juce::Colour(225, 228, 230));
 
         g.fillEllipse(
             sx[i] - 5.0f,
@@ -464,7 +473,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
             10.0f);
 
         g.setColour(
-            juce::Colour(55, 58, 60));
+            juce::Colour(70, 75, 78));
 
         g.drawLine(
             sx[i] - 3.0f,
@@ -479,7 +488,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
     //==============================================================
 
     g.setColour(
-        juce::Colour(100, 110, 118));
+        juce::Colour(225, 245, 255).withAlpha(0.65f));
 
     g.drawLine(
         45.0f,
@@ -516,7 +525,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
     //==============================================================
 
     g.setColour(
-        juce::Colour(170, 190, 205));
+        juce::Colour(225, 245, 255));
 
     g.setFont(
         juce::Font(
@@ -534,35 +543,47 @@ void RGBlueDelayAudioProcessorEditor::paint(
         1);
 
     //==============================================================
-    // LED
+    // WHITE LED
     //==============================================================
 
     const float ledCX = 145.0f;
     const float ledCY = 530.0f;
 
-    bool bypassed =
+    const bool bypassed =
         audioProcessor.parameters
             .getRawParameterValue("BYPASS")
             ->load() > 0.5f;
 
     if (!bypassed)
     {
-        // Glow
+        //==========================================================
+        // WHITE GLOW
+        //==========================================================
 
         g.setColour(
-            juce::Colours::deepskyblue
-                .withAlpha(0.20f));
+            juce::Colours::white.withAlpha(0.22f));
 
         g.fillEllipse(
-            ledCX - 27.0f,
-            ledCY - 27.0f,
-            54.0f,
-            54.0f);
-
-        // LED body
+            ledCX - 30.0f,
+            ledCY - 30.0f,
+            60.0f,
+            60.0f);
 
         g.setColour(
-            juce::Colours::deepskyblue);
+            juce::Colours::white.withAlpha(0.12f));
+
+        g.fillEllipse(
+            ledCX - 38.0f,
+            ledCY - 38.0f,
+            76.0f,
+            76.0f);
+
+        //==========================================================
+        // LED BODY
+        //==========================================================
+
+        g.setColour(
+            juce::Colours::white);
 
         g.fillEllipse(
             ledCX - 12.0f,
@@ -570,11 +591,12 @@ void RGBlueDelayAudioProcessorEditor::paint(
             24.0f,
             24.0f);
 
-        // LED highlight
+        //==========================================================
+        // LED HIGHLIGHT
+        //==========================================================
 
         g.setColour(
-            juce::Colours::white
-                .withAlpha(0.65f));
+            juce::Colours::white);
 
         g.fillEllipse(
             ledCX - 7.0f,
@@ -584,10 +606,12 @@ void RGBlueDelayAudioProcessorEditor::paint(
     }
     else
     {
+        //==========================================================
         // LED OFF
+        //==========================================================
 
         g.setColour(
-            juce::Colour(30, 32, 34));
+            juce::Colour(55, 65, 70));
 
         g.fillEllipse(
             ledCX - 12.0f,
@@ -596,7 +620,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
             24.0f);
 
         g.setColour(
-            juce::Colour(70, 72, 74));
+            juce::Colour(120, 130, 135));
 
         g.drawEllipse(
             ledCX - 12.0f,
@@ -608,7 +632,6 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     //==============================================================
     // REALISTIC 3PDT FOOTSWITCH
-    // SAME OUTER DIAMETER AS KNOB
     //==============================================================
 
     const float switchCX = 250.0f;
@@ -621,8 +644,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
     //==============================================================
 
     g.setColour(
-        juce::Colours::black
-            .withAlpha(0.80f));
+        juce::Colours::black.withAlpha(0.80f));
 
     g.fillEllipse(
         switchCX - switchRadius + 5.0f,
@@ -717,7 +739,9 @@ void RGBlueDelayAudioProcessorEditor::paint(
         capRadius * 2.0f,
         capRadius * 2.0f);
 
-    // Cap border
+    //==============================================================
+    // CAP BORDER
+    //==============================================================
 
     g.setColour(
         juce::Colour(25, 27, 29));
@@ -730,7 +754,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
         2.0f);
 
     //==============================================================
-    // TOP METAL HIGHLIGHT
+    // TOP HIGHLIGHT
     //==============================================================
 
     juce::Path highlightArc;
@@ -745,8 +769,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
         true);
 
     g.setColour(
-        juce::Colours::white
-            .withAlpha(0.65f));
+        juce::Colours::white.withAlpha(0.65f));
 
     g.strokePath(
         highlightArc,
@@ -769,8 +792,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
         true);
 
     g.setColour(
-        juce::Colours::white
-            .withAlpha(0.12f));
+        juce::Colours::white.withAlpha(0.12f));
 
     g.strokePath(
         lowerReflection,
@@ -810,7 +832,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
     //==============================================================
 
     g.setColour(
-        juce::Colour(130, 140, 148));
+        juce::Colour(225, 245, 255));
 
     g.setFont(
         juce::Font(
@@ -851,7 +873,7 @@ void RGBlueDelayAudioProcessorEditor::resized()
         25);
 
     //==============================================================
-    // DELAY - LEFT MIDDLE
+    // DELAY - LEFT
     //==============================================================
 
     delaySlider.setBounds(
@@ -867,7 +889,7 @@ void RGBlueDelayAudioProcessorEditor::resized()
         25);
 
     //==============================================================
-    // REPEAT - RIGHT MIDDLE
+    // REPEAT - RIGHT
     //==============================================================
 
     repeatSlider.setBounds(
@@ -883,7 +905,7 @@ void RGBlueDelayAudioProcessorEditor::resized()
         25);
 
     //==============================================================
-    // FOOTSWITCH
+    // FOOTSWITCH CLICK AREA
     //==============================================================
 
     const float switchRadius = 64.35f;
@@ -900,12 +922,12 @@ void RGBlueDelayAudioProcessorEditor::resized()
         (int) std::round(
             switchRadius * 2.0f);
 
-    // Clickable area exactly follows
-    // the visual footswitch.
-
     footswitchButton.setBounds(
         switchX,
         switchY,
         switchSize,
         switchSize);
+
+    // Make sure it receives mouse/touch clicks.
+    footswitchButton.toFront(false);
 }
