@@ -607,20 +607,25 @@ void RGBlueDelayAudioProcessorEditor::paint(
     //==============================================================
 
     const float switchCX = 250.0f;
+    const float switchCY = 530.0f;
 
-    // Visual movement only.
-    // The actual ON/OFF toggle remains controlled
-    // by the existing ButtonAttachment.
+    const float switchRadius = 64.35f;
 
-    const float switchMovement =
+    //==============================================================
+    // METAL CAP MOVEMENT ONLY
+    //==============================================================
+    //
+    // The washer and black mounting ring remain completely fixed.
+    // Only the metal switch cap moves down while pressed.
+    //
+
+    const float capMovement =
         footswitchButton.isDown()
             ? 3.0f
             : 0.0f;
 
-    const float switchCY =
-        530.0f + switchMovement;
-
-    const float switchRadius = 64.35f;
+    const float capCY =
+        switchCY + capMovement;
 
     //==============================================================
     // DEEP SHADOW
@@ -705,11 +710,11 @@ void RGBlueDelayAudioProcessorEditor::paint(
     juce::ColourGradient capMetal(
         juce::Colour(248, 249, 249),
         switchCX - capRadius * 0.40f,
-        switchCY - capRadius,
+        capCY - capRadius,
 
         juce::Colour(62, 65, 67),
         switchCX + capRadius * 0.48f,
-        switchCY + capRadius,
+        capCY + capRadius,
 
         true);
 
@@ -718,7 +723,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     g.fillEllipse(
         switchCX - capRadius,
-        switchCY - capRadius,
+        capCY - capRadius,
         capRadius * 2.0f,
         capRadius * 2.0f);
 
@@ -731,7 +736,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     g.drawEllipse(
         switchCX - capRadius,
-        switchCY - capRadius,
+        capCY - capRadius,
         capRadius * 2.0f,
         capRadius * 2.0f,
         2.0f);
@@ -744,7 +749,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     highlightArc.addArc(
         switchCX - capRadius * 0.76f,
-        switchCY - capRadius * 0.76f,
+        capCY - capRadius * 0.76f,
         capRadius * 1.52f,
         capRadius * 1.52f,
         3.7f,
@@ -767,7 +772,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     lowerReflection.addArc(
         switchCX - capRadius * 0.79f,
-        switchCY - capRadius * 0.79f,
+        capCY - capRadius * 0.79f,
         capRadius * 1.58f,
         capRadius * 1.58f,
         0.3f,
@@ -794,7 +799,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     g.fillEllipse(
         switchCX - contactRadius,
-        switchCY - contactRadius,
+        capCY - contactRadius,
         contactRadius * 2.0f,
         contactRadius * 2.0f);
 
@@ -806,7 +811,7 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     g.fillEllipse(
         switchCX - contactHighlight,
-        switchCY - contactHighlight,
+        capCY - contactHighlight,
         contactHighlight * 2.0f,
         contactHighlight * 2.0f);
 
