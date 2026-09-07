@@ -193,10 +193,6 @@ RGBlueDelayAudioProcessorEditor(
     : AudioProcessorEditor(&p),
       audioProcessor(p)
 {
-    //==============================================================
-    // KNOBS
-    //==============================================================
-
     setupKnob(
         delaySlider,
         delayLabel,
@@ -280,10 +276,6 @@ RGBlueDelayAudioProcessorEditor(
     setLookAndFeel(
         &pedalLookAndFeel);
 
-    //==============================================================
-    // WINDOW
-    //==============================================================
-
     setSize(
         500,
         640);
@@ -340,10 +332,6 @@ void RGBlueDelayAudioProcessorEditor::setupKnob(
 
     addAndMakeVisible(
         slider);
-
-    //==============================================================
-    // LABEL
-    //==============================================================
 
     label.setText(
         text,
@@ -556,10 +544,6 @@ void RGBlueDelayAudioProcessorEditor::paint(
 
     if (!bypassed)
     {
-        //==========================================================
-        // WHITE GLOW
-        //==========================================================
-
         g.setColour(
             juce::Colours::white.withAlpha(0.22f));
 
@@ -578,10 +562,6 @@ void RGBlueDelayAudioProcessorEditor::paint(
             76.0f,
             76.0f);
 
-        //==========================================================
-        // LED BODY
-        //==========================================================
-
         g.setColour(
             juce::Colours::white);
 
@@ -590,10 +570,6 @@ void RGBlueDelayAudioProcessorEditor::paint(
             ledCY - 12.0f,
             24.0f,
             24.0f);
-
-        //==========================================================
-        // LED HIGHLIGHT
-        //==========================================================
 
         g.setColour(
             juce::Colours::white);
@@ -606,10 +582,6 @@ void RGBlueDelayAudioProcessorEditor::paint(
     }
     else
     {
-        //==========================================================
-        // LED OFF
-        //==========================================================
-
         g.setColour(
             juce::Colour(55, 65, 70));
 
@@ -635,7 +607,18 @@ void RGBlueDelayAudioProcessorEditor::paint(
     //==============================================================
 
     const float switchCX = 250.0f;
-    const float switchCY = 530.0f;
+
+    // Visual movement only.
+    // The actual ON/OFF toggle remains controlled
+    // by the existing ButtonAttachment.
+
+    const float switchMovement =
+        footswitchButton.isDown()
+            ? 3.0f
+            : 0.0f;
+
+    const float switchCY =
+        530.0f + switchMovement;
 
     const float switchRadius = 64.35f;
 
@@ -928,6 +911,7 @@ void RGBlueDelayAudioProcessorEditor::resized()
         switchSize,
         switchSize);
 
-    // Make sure it receives mouse/touch clicks.
+    // Make sure the transparent button receives
+    // mouse and touch input.
     footswitchButton.toFront(false);
 }
