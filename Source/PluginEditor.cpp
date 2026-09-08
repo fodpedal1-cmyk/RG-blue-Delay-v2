@@ -276,9 +276,13 @@ RGBlueDelayAudioProcessorEditor(
     setLookAndFeel(
         &pedalLookAndFeel);
 
+    //==============================================================
+    // CANVAS SIZE ONLY
+    //==============================================================
+
     setSize(
-        500,
-        640);
+        600,
+        740);
 
     startTimerHz(30);
 }
@@ -372,6 +376,13 @@ void RGBlueDelayAudioProcessorEditor::paint(
 {
     auto b =
         getLocalBounds().toFloat();
+
+    //==============================================================
+    // CANVAS BACKGROUND ONLY
+    //==============================================================
+
+    g.fillAll(
+        juce::Colour(18, 20, 22));
 
     //==============================================================
     // LIGHT BLUE METAL ENCLOSURE
@@ -614,10 +625,6 @@ void RGBlueDelayAudioProcessorEditor::paint(
     //==============================================================
     // METAL CAP MOVEMENT ONLY
     //==============================================================
-    //
-    // The washer and black mounting ring remain completely fixed.
-    // Only the metal switch cap moves down while pressed.
-    //
 
     const float capMovement =
         footswitchButton.isDown()
