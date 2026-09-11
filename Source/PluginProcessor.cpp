@@ -246,7 +246,9 @@ void RGBlueDelayAudioProcessor::processBlock(
             float output =
                 dry * (1.0f - mix)
                  + delayed * mix;
-
+            
+            output *= 1.15f;
+            
             output =
                 outputLowPass.processSample(output);
 
