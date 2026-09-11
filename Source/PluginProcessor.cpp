@@ -243,9 +243,15 @@ void RGBlueDelayAudioProcessor::processBlock(
                 writePosition,
                 input + repeat * feedback);
 
-            float output =
-                dry * (1.0f - mix)
-                + delayed * mix;
+            const float dryGain =
+    std::cos(mix * juce::MathConstants<float>::halfPi);
+
+const float wetGain =
+    std::sin(mix * juce::MathConstants<float>::halfPi);
+
+float output =
+    dry * dryGain
+    + delayed * wetGain;
 
             output =
                 outputLowPass.processSample(output);
