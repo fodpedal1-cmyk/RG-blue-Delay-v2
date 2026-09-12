@@ -4,6 +4,8 @@
 #include <cmath>
 #include <algorithm>
 
+//==============================================================================
+
 namespace
 {
     constexpr float pi = 3.14159265358979323846f;
@@ -24,11 +26,6 @@ namespace
     constexpr float maximumDelayMs = 634.0f;
 
     constexpr float maximumFeedback = 0.92f;
-
-    constexpr float inputHighPassHz = 20.0f;
-    constexpr float inputLowPassHz = 16000.0f;
-
-    constexpr float outputLowPassHz = 12000.0f;
 }
 
 //==============================================================================
@@ -117,7 +114,6 @@ void RGBlueDelayAudioProcessor::DelayLine::prepare(
 void RGBlueDelayAudioProcessor::DelayLine::clear()
 {
     buffer.clear();
-
     writePosition = 0;
 }
 
@@ -346,17 +342,6 @@ void RGBlueDelayAudioProcessor::prepareToPlay(
         currentSampleRate,
         0.010);
 
-    for (auto& state : channelState)
-    {
-        state.feedbackHP.setHighPass(
-            currentSampleRate,
-            repeatHighPass);
-
-        state.feedbackLP.setLowPass(
-            currentSampleRate,
-            repeatLowPass);
-    }
-
     updateParameters();
 
     resetDSP();
@@ -407,10 +392,9 @@ void RGBlueDelayAudioProcessor::resetDSP()
     delayLine.clear();
 
     for (auto& state : channelState)
+    {
         state.reset();
 
-    for (auto& state : channelState)
-    {
         state.feedbackHP.setHighPass(
             currentSampleRate,
             repeatHighPass);
@@ -761,4 +745,13 @@ void RGBlueDelayAudioProcessor::setStateInformation(
     }
 
     updateParameters();
+}
+
+//==============================================================================
+// JUCE PLUGIN FACTORY
+//==============================================================================
+
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+{
+    return new RGBlueDelayAudioProcessor();
 }
