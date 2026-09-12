@@ -9,106 +9,109 @@ namespace
     constexpr float minDelayMs = 25.0f;
     constexpr float maxDelayMs = 450.0f;
 
-    constexpr float maxFeedback = 0.92f;
+    constexpr float maxFeedback = 0.985f;
 
-    constexpr float R1  = 1000000.0f;
-    constexpr float R2  = 180000.0f;
-    constexpr float R3  = 360000.0f;
-    constexpr float R4  = 22000.0f;
-    constexpr float R5  = 12000.0f;
-    constexpr float R6  = 1000.0f;
-    constexpr float R7  = 10000.0f;
-    constexpr float R8  = 10000.0f;
-    constexpr float R9  = 10000.0f;
-    constexpr float R10 = 5100.0f;
-    constexpr float R11 = 20000.0f;
+    constexpr float R1 = 180000.0f;
+    constexpr float R2 = 360000.0f;
+    constexpr float R3 = 22000.0f;
+    constexpr float R4 = 12000.0f;
+    constexpr float R5 = 1000.0f;
+
+    constexpr float R6 = 100000.0f;
+    constexpr float R7 = 10000.0f;
+    constexpr float R8 = 10000.0f;
+    constexpr float R9 = 10000.0f;
+    constexpr float R10 = 2700.0f;
+
+    constexpr float R11 = 10000.0f;
     constexpr float R12 = 10000.0f;
-    constexpr float R13 = 1000.0f;
-    constexpr float R14 = 2000.0f;
-    constexpr float R15 = 20000.0f;
-    constexpr float R16 = 10000.0f;
-    constexpr float R17 = 2200.0f;
+    constexpr float R13 = 20000.0f;
+    constexpr float R14 = 1000.0f;
+    constexpr float R15 = 2000.0f;
+
+    constexpr float R16 = 5100.0f;
+    constexpr float R17 = 20000.0f;
     constexpr float R18 = 33.0f;
     constexpr float R19 = 10000.0f;
     constexpr float R20 = 10000.0f;
-    constexpr float R22 = 4700.0f;
 
-    constexpr float C1  = 22e-9f;
-    constexpr float C2  = 47e-12f;
-    constexpr float C3  = 100e-12f;
-    constexpr float C4  = 1e-6f;
-    constexpr float C5  = 1e-6f;
-    constexpr float C6  = 4.7e-9f;
-    constexpr float C7  = 2.2e-9f;
-    constexpr float C8  = 2.2e-9f;
-    constexpr float C9  = 100e-9f;
+    constexpr float C1 = 22e-9f;
+    constexpr float C2 = 47e-12f;
+    constexpr float C3 = 100e-12f;
+    constexpr float C4 = 1e-6f;
+    constexpr float C5 = 1e-6f;
+    constexpr float C6 = 4.7e-9f;
+    constexpr float C7 = 2.2e-9f;
+    constexpr float C8 = 2.2e-9f;
+
+    constexpr float C9 = 100e-9f;
     constexpr float C10 = 100e-9f;
-    constexpr float C11 = 22e-9f;
-    constexpr float C12 = 10e-9f;
-    constexpr float C13 = 1e-6f;
-    constexpr float C14 = 1e-6f;
-    constexpr float C15 = 47e-9f;
-    constexpr float C16 = 15e-9f;
-    constexpr float C17 = 47e-6f;
-    constexpr float C18 = 100e-9f;
-    constexpr float C19 = 100e-9f;
+    constexpr float C11 = 100e-9f;
+    constexpr float C12 = 100e-9f;
+
+    constexpr float C13 = 15e-9f;
+    constexpr float C14 = 2.2e-9f;
+    constexpr float C15 = 10e-9f;
+    constexpr float C16 = 1e-6f;
+    constexpr float C17 = 47e-9f;
+    constexpr float C18 = 22e-9f;
+
+    constexpr float C19 = 1e-6f;
     constexpr float C20 = 100e-6f;
     constexpr float C21 = 47e-6f;
     constexpr float C22 = 47e-6f;
 
-    constexpr float TL072Gain =
-        1.0f + (R3 / R2);
-
-    constexpr float inputHighPassHz =
-        1.0f / (2.0f *
-                juce::MathConstants<float>::pi *
-                R1 * C1);
+    constexpr float inputGain =
+        1.0f + (R2 / R1);
 
     constexpr float inputLowPassHz =
-        1.0f / (2.0f *
-                juce::MathConstants<float>::pi *
-                R3 * C2);
+        1.0f /
+        (2.0f *
+         juce::MathConstants<float>::pi *
+         R2 *
+         C2);
 
-    constexpr float delayHighPassHz =
-        1.0f / (2.0f *
-                juce::MathConstants<float>::pi *
-                R4 * C6);
+    constexpr float delaySendLowPassHz =
+        1.0f /
+        (2.0f *
+         juce::MathConstants<float>::pi *
+         R3 *
+         C6);
 
-    constexpr float delayLowPassHz =
-        1.0f / (2.0f *
-                juce::MathConstants<float>::pi *
-                R5 * C7);
+    constexpr float pt2399OutputLowPassHz =
+        1.0f /
+        (2.0f *
+         juce::MathConstants<float>::pi *
+         R4 *
+         C7);
 
-    constexpr float feedbackHighPassHz =
-        1.0f / (2.0f *
-                juce::MathConstants<float>::pi *
-                R11 * C11);
+    constexpr float repeatLowPassHz =
+        1.0f /
+        (2.0f *
+         juce::MathConstants<float>::pi *
+         R15 *
+         C17);
 
-    constexpr float feedbackLowPassHz =
-        1.0f / (2.0f *
-                juce::MathConstants<float>::pi *
-                R12 * C12);
+    constexpr float repeatHighPassHz =
+        1.0f /
+        (2.0f *
+         juce::MathConstants<float>::pi *
+         R16 *
+         C18);
 
     constexpr float outputHighPassHz =
-        1.0f / (2.0f *
-                juce::MathConstants<float>::pi *
-                R15 * C15);
+        1.0f /
+        (2.0f *
+         juce::MathConstants<float>::pi *
+         R13 *
+         C15);
 
-    constexpr float outputLowPassHz =
-        1.0f / (2.0f *
-                juce::MathConstants<float>::pi *
-                R16 * C16);
-
-    constexpr float pt2399Smoothing =
-        0.18f;
-
-    constexpr float feedbackSoftness =
-        0.72f;
+    constexpr float pt2399Smoothing = 0.18f;
 }
 
 //==============================================================
 
-void RGBlueDelayAudioProcessor::RCFilter::setLowPass(
+void RGBlueDelayAudioProcessor::OnePole::setLowPass(
     double sampleRate,
     float cutoff)
 {
@@ -125,10 +128,9 @@ void RGBlueDelayAudioProcessor::RCFilter::setLowPass(
             static_cast<float>(sampleRate));
 
     a = 1.0f - x;
-    b = x;
 }
 
-void RGBlueDelayAudioProcessor::RCFilter::setHighPass(
+void RGBlueDelayAudioProcessor::OnePole::setHighPass(
     double sampleRate,
     float cutoff)
 {
@@ -144,20 +146,28 @@ void RGBlueDelayAudioProcessor::RCFilter::setHighPass(
             cutoff /
             static_cast<float>(sampleRate));
 
-    a = (1.0f + x) * 0.5f;
-    b = x;
+    a = x;
 }
 
-float RGBlueDelayAudioProcessor::RCFilter::process(
+float RGBlueDelayAudioProcessor::OnePole::processLowPass(
     float input)
 {
-    const float output =
-        a * input +
-        b * z;
+    z += a * (input - z);
+    return z;
+}
 
-    z = output;
+float RGBlueDelayAudioProcessor::OnePole::processHighPass(
+    float input)
+{
+    const float low =
+        z + a * (input - z);
 
-    return output;
+    const float high =
+        input - low;
+
+    z = low;
+
+    return high;
 }
 
 //==============================================================
@@ -222,18 +232,18 @@ float RGBlueDelayAudioProcessor::DelayLine::read(
         position -
         static_cast<float>(indexA);
 
-    const float a =
+    const float sampleA =
         buffer.getSample(
             channel,
             indexA);
 
-    const float b =
+    const float sampleB =
         buffer.getSample(
             channel,
             indexB);
 
-    return a +
-           fraction * (b - a);
+    return sampleA +
+           fraction * (sampleB - sampleA);
 }
 
 void RGBlueDelayAudioProcessor::DelayLine::advance()
@@ -248,19 +258,18 @@ void RGBlueDelayAudioProcessor::DelayLine::advance()
 
 void RGBlueDelayAudioProcessor::ChannelState::reset()
 {
-    inputHP.reset();
-    inputLP.reset();
+    inputLowPass.reset();
 
-    delayHP.reset();
-    delayLP.reset();
+    delayLowPass.reset();
+    delayHighPass.reset();
 
-    feedbackHP.reset();
-    feedbackLP.reset();
+    feedbackLowPass.reset();
+    feedbackHighPass.reset();
 
-    outputLP.reset();
+    outputHighPass.reset();
 
-    feedbackState = 0.0f;
-    delayClock = 0.0f;
+    feedbackMemory = 0.0f;
+    pt2399Memory = 0.0f;
 }
 
 //==============================================================
@@ -312,7 +321,7 @@ RGBlueDelayAudioProcessor::createParameterLayout()
             "Repeat",
             juce::NormalisableRange<float>(
                 0.0f,
-                maxFeedback,
+                1.0f,
                 0.001f),
             0.45f));
 
@@ -355,7 +364,7 @@ void RGBlueDelayAudioProcessor::prepareToPlay(
                 (maxDelayMs / 1000.0))) + 8;
 
     delayBuffer.setSize(
-        getTotalNumOutputChannels(),
+        2,
         delayBufferSize);
 
     delayBuffer.clear();
@@ -380,26 +389,22 @@ void RGBlueDelayAudioProcessor::prepareToPlay(
 
     delaySmoothed.setCurrentAndTargetValue(
         parameters
-            .getRawParameterValue(
-                "DELAY")
+            .getRawParameterValue("DELAY")
             ->load());
 
     feedbackSmoothed.setCurrentAndTargetValue(
         parameters
-            .getRawParameterValue(
-                "REPEAT")
+            .getRawParameterValue("REPEAT")
             ->load());
 
     mixSmoothed.setCurrentAndTargetValue(
         parameters
-            .getRawParameterValue(
-                "MIX")
+            .getRawParameterValue("MIX")
             ->load());
 
     bypassSmoothed.setCurrentAndTargetValue(
         parameters
-            .getRawParameterValue(
-                "BYPASS")
+            .getRawParameterValue("BYPASS")
             ->load());
 
     for (auto& state : channelState)
@@ -432,33 +437,33 @@ void RGBlueDelayAudioProcessor::updateParameters()
 {
     for (auto& state : channelState)
     {
-        state.inputHP.setHighPass(
-            currentSampleRate,
-            inputHighPassHz);
-
-        state.inputLP.setLowPass(
+        state.inputLowPass.setLowPass(
             currentSampleRate,
             inputLowPassHz);
 
-        state.delayHP.setHighPass(
+        state.delayLowPass.setLowPass(
             currentSampleRate,
-            delayHighPassHz);
+            delaySendLowPassHz);
 
-        state.delayLP.setLowPass(
+        state.delayHighPass.setHighPass(
             currentSampleRate,
-            delayLowPassHz);
+            1.0f /
+            (2.0f *
+             juce::MathConstants<float>::pi *
+             R6 *
+             C4));
 
-        state.feedbackHP.setHighPass(
+        state.feedbackHighPass.setHighPass(
             currentSampleRate,
-            feedbackHighPassHz);
+            repeatHighPassHz);
 
-        state.feedbackLP.setLowPass(
+        state.feedbackLowPass.setLowPass(
             currentSampleRate,
-            feedbackLowPassHz);
+            repeatLowPassHz);
 
-        state.outputLP.setLowPass(
+        state.outputHighPass.setHighPass(
             currentSampleRate,
-            outputLowPassHz);
+            outputHighPassHz);
     }
 }
 
@@ -525,6 +530,27 @@ float RGBlueDelayAudioProcessor::readDelaySample(
 
 //==============================================================
 
+float RGBlueDelayAudioProcessor::processPT2399(
+    ChannelState& state,
+    float input,
+    float delayed)
+{
+    float signal =
+        input + delayed;
+
+    signal =
+        state.delayLowPass.processLowPass(
+            signal);
+
+    state.pt2399Memory +=
+        pt2399Smoothing *
+        (signal - state.pt2399Memory);
+
+    return state.pt2399Memory;
+}
+
+//==============================================================
+
 float RGBlueDelayAudioProcessor::processDelaySample(
     int channel,
     float input,
@@ -536,14 +562,18 @@ float RGBlueDelayAudioProcessor::processDelaySample(
         channelState[
             juce::jlimit(0, 1, channel)];
 
-    float dry =
+    const float dry =
         input;
 
     float inputSignal =
-        state.inputHP.process(dry);
+        state.inputLowPass.processLowPass(
+            dry);
 
     inputSignal =
-        state.inputLP.process(inputSignal);
+        std::tanh(
+            inputSignal *
+            inputGain *
+            0.18f);
 
     const float delayed =
         readDelaySample(
@@ -551,43 +581,48 @@ float RGBlueDelayAudioProcessor::processDelaySample(
             delaySamples);
 
     float echo =
-        state.delayHP.process(
+        state.delayHighPass.processHighPass(
             delayed);
 
     echo =
-        state.delayLP.process(
+        state.delayLowPass.processLowPass(
             echo);
+
+    float repeat =
+        state.feedbackHighPass.processHighPass(
+            echo);
+
+    repeat =
+        state.feedbackLowPass.processLowPass(
+            repeat);
+
+    const float feedbackAmount =
+        feedback *
+        maxFeedback;
 
     float feedbackSignal =
-        state.feedbackHP.process(
-            echo);
-
-    feedbackSignal =
-        state.feedbackLP.process(
-            feedbackSignal);
+        repeat *
+        feedbackAmount;
 
     feedbackSignal =
         std::tanh(
             feedbackSignal *
-            (1.0f +
-             feedbackSoftness *
-             feedback));
+            1.08f);
 
-    const float feedbackGain =
-        feedback *
-        (R3 /
-         (R2 + R3));
+    state.feedbackMemory =
+        state.feedbackMemory +
+        0.12f *
+        (feedbackSignal -
+         state.feedbackMemory);
 
     float delayInput =
         inputSignal +
-        feedbackSignal *
-        feedbackGain;
+        state.feedbackMemory;
 
     delayInput =
         std::tanh(
             delayInput *
-            TL072Gain *
-            0.12f);
+            1.35f);
 
     delayBuffer.setSample(
         channel,
@@ -599,7 +634,7 @@ float RGBlueDelayAudioProcessor::processDelaySample(
         + echo * mix;
 
     output =
-        state.outputLP.process(
+        state.outputHighPass.processHighPass(
             output);
 
     return output;
@@ -623,31 +658,27 @@ void RGBlueDelayAudioProcessor::processBlock(
 
     delaySmoothed.setTargetValue(
         parameters
-            .getRawParameterValue(
-                "DELAY")
+            .getRawParameterValue("DELAY")
             ->load());
 
     feedbackSmoothed.setTargetValue(
         parameters
-            .getRawParameterValue(
-                "REPEAT")
+            .getRawParameterValue("REPEAT")
             ->load());
 
     mixSmoothed.setTargetValue(
         parameters
-            .getRawParameterValue(
-                "MIX")
+            .getRawParameterValue("MIX")
             ->load());
 
     bypassSmoothed.setTargetValue(
         parameters
-            .getRawParameterValue(
-                "BYPASS")
+            .getRawParameterValue("BYPASS")
             ->load());
 
-    for (int s = 0;
-         s < numSamples;
-         ++s)
+    for (int sample = 0;
+         sample < numSamples;
+         ++sample)
     {
         const float delayMs =
             delaySmoothed.getNextValue();
@@ -667,31 +698,34 @@ void RGBlueDelayAudioProcessor::processBlock(
                 currentSampleRate /
                 1000.0);
 
-        for (int ch = 0;
-             ch < numChannels;
-             ++ch)
+        for (int channel = 0;
+             channel < numChannels;
+             ++channel)
         {
             const float dry =
                 buffer.getSample(
-                    ch,
-                    s);
+                    channel,
+                    sample);
 
-            const float wet =
+            const float processed =
                 processDelaySample(
-                    ch,
+                    channel,
                     dry,
                     delaySamples,
                     feedback,
                     mix);
 
-            const float finalSample =
-                wet * (1.0f - bypass)
-                + dry * bypass;
+            const float output =
+                processed *
+                (1.0f - bypass)
+                +
+                dry *
+                bypass;
 
             buffer.setSample(
-                ch,
-                s,
-                finalSample);
+                channel,
+                sample,
+                output);
         }
 
         ++writePosition;
