@@ -4,8 +4,6 @@
 #include <cmath>
 #include <algorithm>
 
-//==============================================================================
-
 namespace
 {
     constexpr float pi = 3.14159265358979323846f;
@@ -22,8 +20,8 @@ namespace
     constexpr float repeatLowPass =
         1.0f / (2.0f * pi * R16 * C15);
 
-    constexpr float minimumDelayMs = 60.0f;
-    constexpr float maximumDelayMs = 634.0f;
+    constexpr float minimumDelayMs = 25.0f;
+    constexpr float maximumDelayMs = 450.0f;
 
     constexpr float maximumFeedback = 0.92f;
 }
@@ -344,6 +342,18 @@ void RGBlueDelayAudioProcessor::prepareToPlay(
 
     updateParameters();
 
+    delaySmoothed.setCurrentAndTargetValue(
+        delayTimeMs);
+
+    feedbackSmoothed.setCurrentAndTargetValue(
+        feedbackAmount);
+
+    mixSmoothed.setCurrentAndTargetValue(
+        mixAmount);
+
+    bypassSmoothed.setCurrentAndTargetValue(
+        bypassed ? 1.0f : 0.0f);
+
     resetDSP();
 }
 
@@ -496,23 +506,32 @@ float RGBlueDelayAudioProcessor::processDelaySample(
         state.feedbackLP.process(
             repeat);
 
-    const float feedbackSignal =
+    const float filteredFeedback =
         repeat * feedback;
 
     const float writeSignal =
         input +
-        feedbackSignal;
+        filteredFeedback;
 
     delayLine.write(
         channel,
         writeSignal);
 
-    const float output =
-        input * (1.0f - mix) +
-        delayed * mix;
+    const float drySignal =
+        input;
 
-    state.previousInput = input;
-    state.previousOutput = output;
+    const float wetSignal =
+        delayed;
+
+    const float output =
+        drySignal * (1.0f - mix) +
+        wetSignal * mix;
+
+    state.previousInput =
+        input;
+
+    state.previousOutput =
+        output;
 
     return output;
 }
