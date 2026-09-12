@@ -91,7 +91,9 @@ float RGBlueDelayAudioProcessor::OnePole::process(float input)
     }
 
     const float previous = z;
+
     z = a * (z + input - previous);
+
     return z;
 }
 
@@ -115,6 +117,7 @@ void RGBlueDelayAudioProcessor::DelayLine::prepare(
 void RGBlueDelayAudioProcessor::DelayLine::clear()
 {
     buffer.clear();
+
     writePosition = 0;
 }
 
@@ -343,7 +346,19 @@ void RGBlueDelayAudioProcessor::prepareToPlay(
         currentSampleRate,
         0.010);
 
+    for (auto& state : channelState)
+    {
+        state.feedbackHP.setHighPass(
+            currentSampleRate,
+            repeatHighPass);
+
+        state.feedbackLP.setLowPass(
+            currentSampleRate,
+            repeatLowPass);
+    }
+
     updateParameters();
+
     resetDSP();
 }
 
@@ -352,6 +367,7 @@ void RGBlueDelayAudioProcessor::prepareToPlay(
 void RGBlueDelayAudioProcessor::releaseResources()
 {
     delayLine.clear();
+
     resetDSP();
 }
 
@@ -392,6 +408,17 @@ void RGBlueDelayAudioProcessor::resetDSP()
 
     for (auto& state : channelState)
         state.reset();
+
+    for (auto& state : channelState)
+    {
+        state.feedbackHP.setHighPass(
+            currentSampleRate,
+            repeatHighPass);
+
+        state.feedbackLP.setLowPass(
+            currentSampleRate,
+            repeatLowPass);
+    }
 }
 
 //==============================================================================
@@ -533,15 +560,13 @@ void RGBlueDelayAudioProcessor::processBlock(
 
     updateParameters();
 
+    if (bypassed)
+        return;
+
     const int channelsToProcess =
         std::min(
             numChannels,
             2);
-
-    if (bypassed)
-    {
-        return;
-    }
 
     delaySmoothed.setTargetValue(
         delayTimeMs);
@@ -685,6 +710,7 @@ RGBlueDelayAudioProcessor::getProgramName(
     int index)
 {
     juce::ignoreUnused(index);
+
     return {};
 }
 
@@ -704,16 +730,15 @@ void RGBlueDelayAudioProcessor::changeProgramName(
 void RGBlueDelayAudioProcessor::getStateInformation(
     juce::MemoryBlock& destData)
 {
-    if (auto state =
-        parameters.copyState())
+    auto state =
+        parameters.copyState();
+
+    if (auto xml =
+        state.createXml())
     {
-        if (auto xml =
-            state.createXml())
-        {
-            copyXmlToBinary(
-                *xml,
-                destData);
-        }
+        copyXmlToBinary(
+            *xml,
+            destData);
     }
 }
 
