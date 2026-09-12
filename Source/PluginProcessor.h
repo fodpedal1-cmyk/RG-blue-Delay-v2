@@ -49,10 +49,9 @@ public:
     juce::AudioProcessorValueTreeState parameters;
 
 private:
-    struct RCFilter
+    struct OnePole
     {
         float a = 0.0f;
-        float b = 0.0f;
         float z = 0.0f;
 
         void reset()
@@ -68,7 +67,8 @@ private:
             double sampleRate,
             float cutoff);
 
-        float process(float input);
+        float processLowPass(float input);
+        float processHighPass(float input);
     };
 
     struct DelayLine
@@ -96,19 +96,18 @@ private:
 
     struct ChannelState
     {
-        RCFilter inputHP;
-        RCFilter inputLP;
+        OnePole inputLowPass;
 
-        RCFilter delayHP;
-        RCFilter delayLP;
+        OnePole delayLowPass;
+        OnePole delayHighPass;
 
-        RCFilter feedbackHP;
-        RCFilter feedbackLP;
+        OnePole feedbackLowPass;
+        OnePole feedbackHighPass;
 
-        RCFilter outputLP;
+        OnePole outputHighPass;
 
-        float feedbackState = 0.0f;
-        float delayClock = 0.0f;
+        float feedbackMemory = 0.0f;
+        float pt2399Memory = 0.0f;
 
         void reset();
     };
@@ -117,6 +116,7 @@ private:
     createParameterLayout();
 
     void resetDSP();
+    void updateParameters();
 
     float processDelaySample(
         int channel,
@@ -129,7 +129,10 @@ private:
         int channel,
         float delaySamples) const;
 
-    void updateParameters();
+    float processPT2399(
+        ChannelState& state,
+        float input,
+        float delayed);
 
     juce::AudioBuffer<float> delayBuffer;
 
@@ -144,10 +147,6 @@ private:
 
     int delayBufferSize = 0;
     int writePosition = 0;
-
-    float delayTimeMs = 300.0f;
-    float feedbackAmount = 0.45f;
-    float mixAmount = 0.32f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(
         RGBlueDelayAudioProcessor)
