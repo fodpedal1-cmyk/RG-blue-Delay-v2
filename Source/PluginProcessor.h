@@ -53,22 +53,12 @@ private:
     {
         float a = 0.0f;
         float z = 0.0f;
+        bool highPass = false;
 
-        void reset()
-        {
-            z = 0.0f;
-        }
-
-        void setLowPass(
-            double sampleRate,
-            float cutoff);
-
-        void setHighPass(
-            double sampleRate,
-            float cutoff);
-
-        float processLowPass(float input);
-        float processHighPass(float input);
+        void reset();
+        void setLowPass(double sampleRate, float cutoff);
+        void setHighPass(double sampleRate, float cutoff);
+        float process(float input);
     };
 
     struct DelayLine
@@ -77,37 +67,21 @@ private:
         int size = 0;
         int writePosition = 0;
 
-        void prepare(
-            int channels,
-            int samples);
-
+        void prepare(int channels, int samples);
         void clear();
 
-        void write(
-            int channel,
-            float value);
-
-        float read(
-            int channel,
-            float delaySamples) const;
-
+        void write(int channel, float value);
+        float read(int channel, float delaySamples) const;
         void advance();
     };
 
     struct ChannelState
     {
-        OnePole inputLowPass;
+        OnePole feedbackHP;
+        OnePole feedbackLP;
 
-        OnePole delayLowPass;
-        OnePole delayHighPass;
-
-        OnePole feedbackLowPass;
-        OnePole feedbackHighPass;
-
-        OnePole outputHighPass;
-
-        float feedbackMemory = 0.0f;
-        float pt2399Memory = 0.0f;
+        float previousInput = 0.0f;
+        float previousOutput = 0.0f;
 
         void reset();
     };
@@ -116,7 +90,10 @@ private:
     createParameterLayout();
 
     void resetDSP();
-    void updateParameters();
+
+    float readDelay(
+        int channel,
+        float delaySamples) const;
 
     float processDelaySample(
         int channel,
@@ -125,16 +102,9 @@ private:
         float feedback,
         float mix);
 
-    float readDelaySample(
-        int channel,
-        float delaySamples) const;
+    void updateParameters();
 
-    float processPT2399(
-        ChannelState& state,
-        float input,
-        float delayed);
-
-    juce::AudioBuffer<float> delayBuffer;
+    DelayLine delayLine;
 
     ChannelState channelState[2];
 
@@ -144,9 +114,12 @@ private:
     juce::SmoothedValue<float> bypassSmoothed;
 
     double currentSampleRate = 44100.0;
+    int currentBlockSize = 512;
 
-    int delayBufferSize = 0;
-    int writePosition = 0;
+    float delayTimeMs = 300.0f;
+    float feedbackAmount = 0.45f;
+    float mixAmount = 0.32f;
+    bool bypassed = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(
         RGBlueDelayAudioProcessor)
